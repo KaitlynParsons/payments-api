@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import schedule from "node-schedule";
+import moment from "moment";
 
 export interface PaymentDetails {
   payDate?: Date;
@@ -39,10 +41,8 @@ export class UserAccount {
 
     const userPayment: Payment = { id: uuidv4(), ...payment };
 
-    if (!payment.payDate) {
-      this.payments.push(userPayment);
-      this.balance -= payment.amount;
-    }
+    this.payments.push(userPayment);
+    this.balance -= payment.amount;
 
     return userPayment;
   }
@@ -86,5 +86,35 @@ export class UserAccount {
    */
   public async getBalance(): Promise<number> {
     return this.balance;
+  }
+
+  /**
+   * Schedule a payment to trigger on a given date
+   * @param payment payment to schedule
+   * @returns Promise
+   */
+  public async schedulePayment(payment: PaymentDetails): Promise<string | void> {
+    // early return
+    if (!payment.payDate) return "Pay Date required";
+    
+    const payDate = new Date(payment.payDate);
+    // get maximum schedule date, return error message if exceeded
+    if(this.getDateDifference(payDate, new Date()) > 28) return "Exceeded maximum future payment cut off.";
+
+    // Schedule payment to trigger for given day
+    schedule.scheduleJob(payDate, () => {
+      this.createPayment(payment);
+      console.info(`Job has been triggered at: ${new Date()}`)
+    });
+  }
+
+  /**
+   * Helper function to determine the difference in days between two dates
+   * @param payDate the date the payment is to be scheduled for
+   * @param maxScheduleDate maximum schedule date
+   * @returns number
+   */
+  private getDateDifference(payDate: Date, maxScheduleDate: Date): number {
+    return moment(payDate).diff(maxScheduleDate, 'days');
   }
 }

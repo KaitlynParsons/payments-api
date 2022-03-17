@@ -62,7 +62,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"90b31aa0-6aa1-461b-8299-b0f91ae64bd0\",\r\n    \"amount\": 100,\r\n    \"beneficiary\": \"Bob\",\r\n    \"description\": \"$100 payment\"\r\n}",
+					"raw": "{\r\n    \"id\": \"adf3b290-4e90-4210-a22c-a0c23e66a671\",\r\n    \"amount\": 150,\r\n    \"beneficiary\": \"Bob\",\r\n    \"description\": \"$150 payment\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -109,6 +109,37 @@
 					"port": "8000",
 					"path": [
 						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule Payment",
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"payDate\": \"2022-03-17\",\r\n    \"amount\": 100,\r\n    \"beneficiary\": \"Kaitlyn\",\r\n    \"description\": \"$100 payment\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/schedule",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"schedule"
 					]
 				}
 			},

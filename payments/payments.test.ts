@@ -1,4 +1,4 @@
-import { UserAccount, PaymentDetails, Payment } from '../models/payments';
+import { UserAccount, PaymentDetails, Payment } from './payments.model';
 
 describe("Test Payments Functions", () => {
   const mockUserAccount = new UserAccount();
@@ -45,5 +45,16 @@ describe("Test Payments Functions", () => {
       mockUserAccount.getPayments().then(result => {
         expect(result.length).toStrictEqual(1);
       });
+    });
+
+    it("Schedule Job to trigger in 24 hours", () => {
+      const mockPayment: PaymentDetails = {
+        payDate: new Date(),
+        amount: 50,
+        beneficiary: 'Test',
+        description: 'A test scheduled payment'
+      };
+
+      mockUserAccount.schedulePayment(mockPayment);
     });
   });
