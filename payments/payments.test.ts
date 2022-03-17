@@ -47,14 +47,26 @@ describe("Test Payments Functions", () => {
       });
     });
 
-    it("Schedule Job to trigger in 24 hours", () => {
+    it("Schedule Job to trigger in 48 hours", () => {
+      jest.useFakeTimers('modern').setSystemTime(new Date());
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 2);
       const mockPayment: PaymentDetails = {
-        payDate: new Date(),
+        payDate: currentDate,
         amount: 50,
         beneficiary: 'Test',
         description: 'A test scheduled payment'
       };
-
+      const createPaymentSpy = jest.spyOn(mockUserAccount, 'createPayment');
       mockUserAccount.schedulePayment(mockPayment);
+      jest.advanceTimersByTime(1000 * 60 * 60 * 24 * 3);
+      expect(createPaymentSpy).toHaveBeenCalledTimes(1);
+    });
+
+    
+    it("Current payments length should be 2", () => {
+      mockUserAccount.getPayments().then(result => {
+        expect(result.length).toStrictEqual(2);
+      });
     });
   });

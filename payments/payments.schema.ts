@@ -4,7 +4,7 @@ const joi = Joi.extend(require('@joi/date'));
 
 const paymentSchema = joi.object({
     payDate: joi.date().format('YYYY-MM-DD').optional(),
-    amount: joi.number().required(),
+    amount: joi.number().greater(0).required(),
     beneficiary: joi.string().required(),
     description: joi.string().required()
 });

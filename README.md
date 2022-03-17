@@ -1,7 +1,7 @@
 # Payments API
 Coding test of a basic payments API.
 
-- TODO: business days logic, scheduled payments tests
+- TODO: business days logic
 
 # Setup
 - npm install
@@ -9,7 +9,8 @@ Coding test of a basic payments API.
 - To Run: npm run start
 - To Run Test: npm run test
 
-## Considerations Given I Spend More Time
-- Improved and fleshed out schema validation against full request body etc
+## Considerations Given More Time
+- Improved and fleshed out schema validation
 - Timezones
-- Improved error handling
+- Improved error handling (meaningful errors)
+- Updating future payments to a different date
