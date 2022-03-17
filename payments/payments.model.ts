@@ -97,23 +97,41 @@ export class UserAccount {
     // early return
     if (!payment.payDate) return "Pay Date required";
     
-    const payDate = new Date(payment.payDate);
-    // get maximum schedule date, return error message if exceeded
-    if(this.getDateDifference(payDate, new Date()) > 28) return "Exceeded maximum future payment cut off.";
+    const payDate = this.cleanDate(new Date(payment.payDate));
 
-    // Schedule payment to trigger for given day
-    schedule.scheduleJob(payDate, () => {
+    // get maximum schedule date, return error message if exceeded
+    if(this.getDateDifference(payDate, this.cleanDate(new Date())) > 28) return "Exceeded maximum future payment cut off.";
+
+    const nextBusinessDay = this.cleanDate(this.getNextBusinessDay());
+    if (
+      payDate.toString() === nextBusinessDay.toString() ||
+      payDate.toString() === this.cleanDate(new Date()).toString()
+    ) {
       this.createPayment(payment);
-      console.info(`Job has been triggered at: ${new Date()}`)
-    });
+    } else {
+      schedule.scheduleJob(payDate, () => {
+        this.createPayment(payment);
+        console.info(`Job has been triggered at: ${new Date()}`);
+      });
+    }
   }
 
-  /**
-   * Helper function to determine the difference in days between two dates
-   * @param payDate the date the payment is to be scheduled for
-   * @param maxScheduleDate maximum schedule date
-   * @returns number
-   */
+  private cleanDate(date: Date): Date {
+    return new Date(date.toDateString());
+  }
+
+  private getNextBusinessDay(): Date {
+    const currentDate = new Date();
+    const day = currentDate.getDay();
+    let add = 1;
+
+    if (day === 5) add = 3;
+    else if (day === 6) add = 2;
+    currentDate.setDate(currentDate.getDate() + add);
+
+    return currentDate;
+  }
+
   private getDateDifference(payDate: Date, maxScheduleDate: Date): number {
     return moment(payDate).diff(maxScheduleDate, 'days');
   }
