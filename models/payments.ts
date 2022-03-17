@@ -1,4 +1,3 @@
-export const sum = (a: number, b: number): number => a + b;
 import { v4 as uuidv4 } from "uuid";
 
 export interface PaymentDetails {
