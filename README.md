@@ -10,7 +10,7 @@ Coding test of a basic payments API.
 # Notes
 - payments-api.postman_collection.json can be imported to postman for further manual testing.
 
-## Considerations Given More Time
+## Considerations
 - Improved and fleshed out schema validation
 - Timezones
 - Improved error handling (meaningful errors, cleaner/reusable implementation)
